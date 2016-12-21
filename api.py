@@ -47,12 +47,15 @@ class Dipas(Resource):
     def get(self):
         return dipas
         
-
+class Beers(Resource):
+    def get(self):
+        return pilsners.append(ipas.append(dipas).append(stouts))
 
 api.add_resource(Pilsners, '/pilsners')
 api.add_resource(Stouts, '/stouts')
 api.add_resource(IPAs, '/ipas')
 api.add_resource(Dipas, '/dipas')
+api.add_resource(Beers, '/beers')
 
 if __name__ == '__main__':
     app.run(debug=True)
