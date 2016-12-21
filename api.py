@@ -8,9 +8,11 @@ pilsners = []
 stouts = []
 ipas = []
 dipas = []
+beers = []
 
 def addBeer(style, brewer, product):
     style.append({"brewer": brewer, "product": product})
+    beers.append({"brewer": brewer, "product": product})
     
 addBeer(pilsners, "Pilsner Urquell", "Pilsner Urquell")
 addBeer(pilsners, "AB Inbev", "Stella Artois")
@@ -48,8 +50,8 @@ class Dipas(Resource):
         return dipas
         
 class Beers(Resource):
-    def get(self):
-        return pilsners.append(ipas.append(dipas).append(stouts))
+    def get(self):        
+        return beers
 
 api.add_resource(Pilsners, '/pilsners')
 api.add_resource(Stouts, '/stouts')
