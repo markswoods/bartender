@@ -4,26 +4,48 @@ from flask_restful import Resource, Api
 app = Flask(__name__)
 api = Api(app)
 
-pilsner = ["Stella Artois", "Pilsner Urquell"]
-stout = ["Guiness", "Chocolate Stout"]
-ipa = ["All Day IPA", "Two Hearted", "Gate Crasher"]
-dipa = ["Road 2 Ruin", "Heddy Topper", "Pliny the Elder", "Hop Stupid"]
+pilsners = []
+stouts = []
+ipas = []
+dipas = []
+
+def addBeer(style, brewer, product):
+    style.append({"brewer": brewer, "product": product})
+    
+addBeer(pilsners, "Pilsner Urquell", "Pilsner Urquell")
+addBeer(pilsners, "AB Inbev", "Stella Artois")
+addBeer(pilsners, "Stiegl", "Pils")
+addBeer(pilsners, "Trummer", "Pils")
+
+addBeer(stouts, "Victory", "Donnybrook Stout")
+addBeer(stouts, "Deschuts", "Obsidian Stout")
+addBeer(stouts, "Deschutes", "Obsidian Stout")
+addBeer(stouts, "Brooklyn", "Black Chocolate Stout")
+
+addBeer(ipas, "Founders", "All Day IPA")
+addBeer(ipas, "Bells", "Two Hearted")
+addBeer(ipas, "Temperance", "Gatecrasher")
+
+addBeer(dipas, "Two Roads", "Road 2 Ruin")
+addBeer(dipas, "The Alchemist", "Heady Topper")
+addBeer(dipas, "Russian River", "Pliny the Elder")
+addBeer(dipas, "Lagunitas", "Hop Stoopid")
 
 class Pilsners(Resource):
     def get(self):
-        return pilsner
+        return pilsners
         
 class Stouts(Resource):
     def get(self):
-        return stout
+        return stouts
         
 class IPAs(Resource):
     def get(self):
-        return ipa
+        return ipas
         
 class Dipas(Resource):
     def get(self):
-        return dipa
+        return dipas
         
 
 
