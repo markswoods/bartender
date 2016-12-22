@@ -1,7 +1,15 @@
 from flask import Flask
 from flask_restful import Resource, Api
+from flask_basicauth import BasicAuth
 
 app = Flask(__name__)
+
+app.config['BASIC_AUTH_USERNAME'] = 'mwoods'
+app.config['BASIC_AUTH_PASSWORD'] = 'hp92275a'
+app.config['BASIC_AUTH_FORCE'] = True
+
+basic_auth = BasicAuth(app)
+
 api = Api(app)
 
 pilsners = []
