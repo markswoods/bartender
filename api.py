@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from flask_basicauth import BasicAuth
 
 app = Flask(__name__)
@@ -68,8 +68,13 @@ api.add_resource(Dipas, '/dipas')
 api.add_resource(Beers, '/beers')
 
 # Rest, but adhering to format required for API.ai
-class ApiaiBeers(Resource):
-    def post(self):        
+class Apiai(Resource):
+    def post(self):  
+        
+        parser = reqparse.RequestParser()
+        parser.add_argument('action', location='json')
+        args = parser.parse_args() 
+        print 'Requested action: '    + args['action']  
 
         speech = 'On tap I have '
         for beer in beers:
@@ -86,7 +91,7 @@ class ApiaiBeers(Resource):
         }
 
 
-api.add_resource(ApiaiBeers, '/apiai')
+api.add_resource(Apiai, '/apiai')
 
 if __name__ == '__main__':
     app.run(debug=True)
