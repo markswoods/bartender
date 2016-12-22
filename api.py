@@ -86,7 +86,7 @@ class ApiaiBeers(Resource):
         }
 
 
-api.add_resource(ApiaiBeers, '/apiai/beers')
+api.add_resource(ApiaiBeers, '/apiai')
 
 if __name__ == '__main__':
     app.run(debug=True)
