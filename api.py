@@ -74,7 +74,8 @@ class Apiai(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('action', location='json')
         args = parser.parse_args() 
-        print 'Requested action: '    + args['action']  
+        #print 'Requested action: ' + args['action']  
+        print flask.Request.json
 
         speech = 'On tap I have '
         for beer in beers:
