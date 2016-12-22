@@ -28,7 +28,6 @@ addBeer(pilsners, "Stiegl", "Pils")
 addBeer(pilsners, "Trummer", "Pils")
 
 addBeer(stouts, "Victory", "Donnybrook Stout")
-addBeer(stouts, "Deschuts", "Obsidian Stout")
 addBeer(stouts, "Deschutes", "Obsidian Stout")
 addBeer(stouts, "Brooklyn", "Black Chocolate Stout")
 
@@ -61,11 +60,33 @@ class Beers(Resource):
     def get(self):        
         return beers
 
+# Pure rest
 api.add_resource(Pilsners, '/pilsners')
 api.add_resource(Stouts, '/stouts')
 api.add_resource(IPAs, '/ipas')
 api.add_resource(Dipas, '/dipas')
 api.add_resource(Beers, '/beers')
+
+# Rest, but adhering to format required for API.ai
+class ApiaiBeers(Resource):
+    def post(self):        
+
+        speech = 'On tap I have '
+        for beer in beers:
+            speech += beer['brewer'] + ' ' + beer['product'] + ', '
+            
+        # remove the trailing comma
+        speech = speech[:-2]
+        return {
+            "speech": speech,
+            "displayText": speech,
+            # "data": data,
+            # "contextOut": [],
+            "source": "bartender service"
+        }
+
+
+api.add_resource(ApiaiBeers, '/apiai/beers')
 
 if __name__ == '__main__':
     app.run(debug=True)
