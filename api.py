@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_basicauth import BasicAuth
 
@@ -75,8 +75,9 @@ class Apiai(Resource):
         parser.add_argument('action', location='json')
         args = parser.parse_args() 
         #print 'Requested action: ' + args['action']  
-        print flask.Request.json
-
+        payload = request.get_json()
+        print 'action: ' + payload['result']['action']
+        
         speech = 'On tap I have '
         for beer in beers:
             speech += beer['brewer'] + ' ' + beer['product'] + ', '
