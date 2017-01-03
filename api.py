@@ -86,9 +86,10 @@ api.add_resource(Names, '/names')
 class Apiai(Resource):
     def post(self):          
         payload = request.get_json()
-        print 'action: ' + payload['result']['action']
         
-        print json.dumps(json.JSONEncoder().encode((payload)), indent=4, separators=(',', ':'))
+        # some debugging controls
+        print 'action: ' + payload['result']['action']        
+        print json.dumps(payload, indent=4, separators=(',', ':'))
 
         if payload['result']['action'] == 'Beer.List':
             speech = 'On tap I have '
