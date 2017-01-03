@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_basicauth import BasicAuth
+import json
 
 app = Flask(__name__)
 
@@ -87,6 +88,9 @@ class Apiai(Resource):
         payload = request.get_json()
         print 'action: ' + payload['result']['action']
 
+        json.loads(payload)
+        print json.dumps(resp, indent=4, separators=(',', ':'))
+
         if payload['result']['action'] == 'Beer.List':
             speech = 'On tap I have '
             for beer in beers[:-1]:
@@ -104,8 +108,12 @@ class Apiai(Resource):
 
         if payload['result']['action'] == 'Beer.Order':
             print payload['result']['parameters']
+            beer = payload['result']['parameters']['brewer']
+            if beer == '':
+                beer = payload['result']['parameters']['beer']['product']
+                 
 
-            speech = 'I will get you a beer.'
+            speech = 'One ' + beer + ' coming up!'
             return {
                 "speech": speech,
                 "displayText": speech,
