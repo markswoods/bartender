@@ -106,8 +106,6 @@ class Apiai(Resource):
                 "source": "bartender service"
             }
 
-        # TODO: Allow for specification of both brewer and product
-        
         if payload['result']['action'] == 'Beer.Order':
             outContext = ''
             print payload['result']['parameters']
