@@ -111,31 +111,40 @@ class Apiai(Resource):
         if payload['result']['action'] == 'Beer.Order':
             outContext = ''
             print payload['result']['parameters']
-            beer = payload['result']['parameters']['brewer']
-            if beer != '':
+            # check to see which keys are present...
+            brewer = ''
+            product = ''
+            if 'brewer' in payload['result']['parameters']['beer']:
+                brewer = payload['result']['parameters']['beer']['brewer']
+            if 'product' in payload['result']['parameters']['beer']:
+                product = payload['result']['parameters']['beer']['product']
                 
-                # Check to see if the requested brewer has more than one product on tap
-                blist = [b for b in beers if b["brewer"] == beer]
-                if len(blist) > 1:
-                    speech = 'That brewer makes ' 
-                    for b in blist[:-1]:
-                        speech += b['product'] + ', '
-                    speech += 'and ' + blist[-1]['product'] + '. Which do you want?'
-                    outContext = 'ambiguous_selection'
-                else:
-                    speech = 'One ' + beer + ' coming up!'
-            else:    # brewer not specified so look for product
-                beer = payload['result']['parameters']['beer']['product']
-                # Are there more than one products with that same name?
-                blist = [b for b in beers if b["product"] == beer]
-                if len(blist) > 1:
-                    speech = 'Several brewers make a beer with that name, including: '
-                    for b in blist[:-1]:
-                        speech += b['brewer'] + ', '
-                    speech += 'and ' + blist[-1]['brewer'] + '. Which do you want?'
-                    outContext = 'ambiguous_selection'
-                else:                 
-                    speech = 'One ' + beer + ' coming up!'
+            # if both brewer and product provided, we are done
+            if brewer != '' and product != '':
+                speech = 'Now serving your ' + brewer + ' ' + product + '.'
+            else:    
+                if brewer != '':                
+                    # Check to see if the requested brewer has more than one product on tap
+                    blist = [b for b in beers if b["brewer"] == brewer]
+                    if len(blist) > 1:
+                        speech = 'That brewer makes ' 
+                        for b in blist[:-1]:
+                            speech += b['product'] + ', '
+                        speech += 'and ' + blist[-1]['product'] + '. Which do you want?'
+                        outContext = 'ambiguous_selection'
+                    else:
+                        speech = 'Here is your ' + brewer + '.'
+                else:    # brewer not specified so look for product
+                    # Are there more than one products with that same name?
+                    blist = [b for b in beers if b["product"] == product]
+                    if len(blist) > 1:
+                        speech = 'Several brewers make a beer with that name, including: '
+                        for b in blist[:-1]:
+                            speech += b['brewer'] + ', '
+                        speech += 'and ' + blist[-1]['brewer'] + '. Which do you want?'
+                        outContext = 'ambiguous_selection'
+                    else:                 
+                        speech = 'Here is your ' + product + '.'
                 
             return {
                 "speech": speech,
