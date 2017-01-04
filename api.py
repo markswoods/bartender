@@ -107,6 +107,7 @@ class Apiai(Resource):
             }
 
 #TODO: Add some randomized variations on the response speech.
+#TODO: Add ability to open a tab
 
         if payload['result']['action'] == 'Beer.Order':
             outContext = ''
@@ -145,7 +146,8 @@ class Apiai(Resource):
                         outContext = 'ambiguous_selection'
                     else:                 
                         speech = 'Here is your ' + product + '.'
-                
+            
+            print "out context: " + outContext    
             return {
                 "speech": speech,
                 "displayText": speech,
