@@ -89,7 +89,7 @@ class Apiai(Resource):
         
         # some debugging controls
         print 'action: ' + payload['result']['action']        
-        print json.dumps(payload, indent=4, separators=(',', ':'))
+        #print json.dumps(payload, indent=4, separators=(',', ':'))
 
         if payload['result']['action'] == 'Beer.List':
             speech = 'On tap I have '
@@ -106,22 +106,49 @@ class Apiai(Resource):
                 "source": "bartender service"
             }
 
+        # TODO: Allow for specification of both brewer and product
+        
         if payload['result']['action'] == 'Beer.Order':
+            outContext = ''
             print payload['result']['parameters']
             beer = payload['result']['parameters']['brewer']
-            if beer == '':
+            if beer != '':
+                
+                # Check to see if the requested brewer has more than one product on tap
+                blist = [b for b in beers if b["brewer"] == beer]
+                if len(blist) > 1:
+                    speech = 'That brewer makes ' 
+                    for b in blist[:-1]:
+                        speech += b['product'] + ', '
+                    speech += 'and ' + blist[-1]['product'] + '. Which do you want?'
+                    outContext = 'ambiguous_selection'
+                else:
+                    speech = 'One ' + beer + ' coming up!'
+            else:    # brewer not specified so look for product
                 beer = payload['result']['parameters']['beer']['product']
-                 
-
-            speech = 'One ' + beer + ' coming up!'
+                # Are there more than one products with that same name?
+                blist = [b for b in beers if b["product"] == beer]
+                if len(blist) > 1:
+                    speech = 'Several brewers make a beer with that name, including: '
+                    for b in blist[:-1]:
+                        speech += b['brewer'] + ', '
+                    speech += 'and ' + blist[-1]['brewer'] + '. Which do you want?'
+                    outContext = 'ambiguous_selection'
+                else:                 
+                    speech = 'One ' + beer + ' coming up!'
+                
             return {
                 "speech": speech,
                 "displayText": speech,
                 # "data": data,
-                # "contextOut": [],
+                "contextOut": [outContext],
                 "source": "bartender service"
             }
 
+# ideas to incorporate
+#   ask if customer wants to open a tab. if so, under what name?
+#   track beers consumed by this customer (session?)
+#   close out a tab - adding up total
 
 api.add_resource(Apiai, '/apiai')
 
