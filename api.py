@@ -132,7 +132,7 @@ class Apiai(Resource):
                         for b in blist[:-1]:
                             speech += b['product'] + ', '
                         speech += 'and ' + blist[-1]['product'] + '. Which do you want?'
-                        outContext = {'name': 'ambiguous_selection', 'lifespan': 1}
+                        outContext = {'name': 'ambiguous_product', 'lifespan': 1}
                     else:
                         speech = 'Here is your ' + brewer + '.'
                 else:    # brewer not specified so look for product
@@ -143,7 +143,7 @@ class Apiai(Resource):
                         for b in blist[:-1]:
                             speech += b['brewer'] + ', '
                         speech += 'and ' + blist[-1]['brewer'] + '. Which do you want?'
-                        outContext = {'name': 'ambiguous_selection', 'lifespan': 1}
+                        outContext = {'name': 'ambiguous_brewer', 'lifespan': 1}
                     else:                 
                         speech = 'Here is your ' + product + '.'
             
