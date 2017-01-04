@@ -106,6 +106,8 @@ class Apiai(Resource):
                 "source": "bartender service"
             }
 
+#TODO: Add some randomized variations on the response speech.
+
         if payload['result']['action'] == 'Beer.Order':
             outContext = ''
             print payload['result']['parameters']
