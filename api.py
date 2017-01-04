@@ -110,7 +110,7 @@ class Apiai(Resource):
 #TODO: Add ability to open a tab
 
         if payload['result']['action'] == 'Beer.Order':
-            outContext = {}
+            outContext = null
             print payload['result']['parameters']
             # check to see which keys are present...
             brewer = ''
