@@ -95,7 +95,7 @@ class Apiai(Resource):
             speech = 'On tap I have '
             for beer in beers[:-1]:
                 speech += beer['brewer'] + ' ' + beer['product'] + ', '
-            speech += 'and ' + beer['brewer'] + ' ' + beer['product'] + '. '   # pretty up the last one
+            speech += 'and ' + beers[-1]['brewer'] + ' ' + beers[-1]['product'] + '. '   # pretty up the last one
             speech += 'Now, what can I get you?'                            # Webhook m/provide all text
             
             return {
