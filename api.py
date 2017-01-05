@@ -119,6 +119,11 @@ class Apiai(Resource):
             if 'product' in payload['result']['parameters']['beer']:
                 product = payload['result']['parameters']['beer']['product']
 
+            # If both brewer and product are empty, then we don't know about this beer
+            if brewer == '' and product == '':
+                speech = 'No, we do not have ' + payload['result']['parameters']['beer'] + '. Would you like to see the beer list?'
+                outContext = {'name': 'See_Beer_List', 'lifespan': 1}
+                
             # If we have both brewer and product, search the list
             if brewer != '' and product != '':
                 blist = [b for b in beers if b["brewer"] == brewer and b['product'] == product]
@@ -141,7 +146,7 @@ class Apiai(Resource):
                         outContext = {'name': 'ambiguous_product', 'lifespan': 1}
                         outContext['parameters'] = {'brewer': brewer}
                     else:
-                        speech = 'Yes, I have that beer on tap. Would you like me to pour one?'
+                        speech = 'Yes, I have the ' + blist[0]['product'] + ' on tap. Would you like me to pour one?'
                         outContext['parameters'] = {'brewer': brewer, 'product': blist[0]['product']}
                 else:    # brewer not specified so look for product
                     # Are there more than one products with that same name?
@@ -154,7 +159,7 @@ class Apiai(Resource):
                         outContext = {'name': 'ambiguous_brewer', 'lifespan': 1}
                         outContext['parameters'] = {'product': product}
                     else:                 
-                        speech = 'Yes, I have that beer on tap. Would you like me to pour one?'
+                        speech = 'Yes, I have one from ' + blist[0]['brewer'] + ' on tap. Would you like me to pour one?'
                         outContext['parameters'] = {'brewer': blist[0]['brewer'], 'product': product}
             
 
@@ -181,7 +186,12 @@ class Apiai(Resource):
                 brewer = payload['result']['parameters']['beer']['brewer']
             if 'product' in payload['result']['parameters']['beer']:
                 product = payload['result']['parameters']['beer']['product']
-                
+
+            # If both brewer and product are empty, then we don't know about this beer
+            if brewer == '' and product == '':
+                speech = 'No, we do not have ' + payload['result']['parameters']['beer'] + '. Would you like to see the beer list?'
+                outContext = {'name': 'See_Beer_List', 'lifespan': 1}
+                                
             # if both brewer and product provided, we are done
             if brewer != '' and product != '':
                 speech = 'Now serving your ' + brewer + ' ' + product + '.'
