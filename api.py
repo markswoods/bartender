@@ -116,16 +116,26 @@ class Apiai(Resource):
 #TODO: Add ability to open a tab
 #TODO: Request beers in a style
 #TODO: Request beers from a particular brewer
+#TODO: Recommend a particular beer in a style
 
         #
         # Beer.List 
         #   User requested a list of beers served
         #
         if payload['result']['action'] == 'Beer.List':
-            speech = 'On tap I have '
-            for beer in beers[:-1]:
+            # Check to see if a particular style was requested
+            if 'style' in payload['result']['parameters']:
+                style = payload['result']['parameters']['style']
+                blist = [b for b in beers if b['style'] == style]
+                speech = 'For ' + style + ' I have '
+            else:
+                style = ''
+                speech = 'On tap I have '
+                blist = beers
+           
+            for beer in blist[:-1]:
                 speech += beer['brewer'] + ' ' + beer['product'] + ', '
-            speech += 'and ' + beers[-1]['brewer'] + ' ' + beers[-1]['product'] + '. '   # pretty up the last one
+            speech += 'and ' + blist[-1]['brewer'] + ' ' + blist[-1]['product'] + '. '   # pretty up the last one
             speech += 'Now, what can I get you?'                            # Webhook m/provide all text
             
             return {
