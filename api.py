@@ -114,6 +114,7 @@ class Apiai(Resource):
         #print json.dumps(payload, indent=4, separators=(',', ':'))
 
 #TODO: Add some randomized variations on the response speech.
+#TODO:  Consider letting API.ai handle response, use parms/data for any customizations
 #TODO: Add ability to open a tab
 #TODO: Request beers from a particular brewer
 #TODO: Recommend a particular beer in a style
@@ -314,6 +315,6 @@ class Apiai(Resource):
 
 
 api.add_resource(Apiai, '/apiai')
-
+        
 if __name__ == '__main__':
     app.run(debug=True)
