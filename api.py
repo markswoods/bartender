@@ -39,33 +39,54 @@ addBeer("Double IPA", "The Alchemist", "Heady Topper")
 addBeer("Double IPA", "Russian River", "Pliny the Elder")
 addBeer("Double IPA", "Lagunitas", "Hop Stoopid")
 
+# Helper functions for manipulating the list of beers
+def styles():
+    return list(set([b["style"] for b in beers]))   # set selects only unique values
+
+def pilsners():
+    return [b for b in beers if b["style"] == "Pilsner"]
+    
+def stouts():
+    return [b for b in beers if b["style"] == "Stout"]
+
+def ipas():
+    return [b for b in beers if b["style"] == "IPA"]
+    
+def dipas():
+    return [b for b in beers if b["style"] == "Double IPA"]
+
+
+def brewers():
+    return [b["brewer"] for b in beers]
+        
+# Resource classes for get, post, etc.    
 class Pilsners(Resource):
     def get(self):
-        return [b for b in beers if b["style"] == "Pilsner"]
+        return pilsners()
         
 class Stouts(Resource):
     def get(self):
-        return [b for b in beers if b["style"] == "Stout"]
+        return stouts()
         
 class IPAs(Resource):
     def get(self):
-        return [b for b in beers if b["style"] == "IPA"]
+        return ipas()
         
 class Dipas(Resource):
     def get(self):
-        return [b for b in beers if b["style"] == "Double IPA"]
-        
+        return dipas()
+       
 class Beers(Resource):
     def get(self):        
         return beers
         
 class Brewers(Resource):
     def get(self):
-        return [b["brewer"] for b in beers]
+        return brewers()
         
 class Styles(Resource):
     def get(self):
-        return list(set([b["style"] for b in beers]))   # set selects only unique values
+        return styles()
     
 class Names(Resource):
     def get(self):
@@ -93,12 +114,12 @@ class Apiai(Resource):
 
 #TODO: Add some randomized variations on the response speech.
 #TODO: Add ability to open a tab
-#TODO: Request styles available
 #TODO: Request beers in a style
 #TODO: Request beers from a particular brewer
 
         #
-        # Beer List requested
+        # Beer.List 
+        #   User requested a list of beers served
         #
         if payload['result']['action'] == 'Beer.List':
             speech = 'On tap I have '
@@ -116,7 +137,28 @@ class Apiai(Resource):
             }
 
         #
-        # Specific beer or brewer queried for availability
+        # Beer.StylesQuery
+        #   User requested styles
+        #
+        if payload['result']['action'] == 'Beer.StylesQuery':
+            speech = 'Today I am serving: '
+            stylelist = styles()
+            
+            for style in stylelist[:-1]:
+                speech += style + 's, '
+            speech += 'and ' + stylelist[-1] + 's. '   # pretty up the last one
+            
+            return {
+                "speech": speech,
+                "displayText": speech,
+                # "data": data,
+                # "contextOut": [],
+                "source": "bartender service"
+            }
+        
+        #
+        # Beer.Query
+        #   Specific beer or brewer queried for availability
         #
         if payload['result']['action'] == 'Beer.Query':
             outContext = {'name': 'beer_available', 'lifespan': 1}
@@ -191,7 +233,8 @@ class Apiai(Resource):
 
 
         #
-        # Specific beer or brewer requested
+        # Beer.Order
+        #   Specific beer or brewer requested
         #
         if payload['result']['action'] == 'Beer.Order':
             outContext = {'name': 'beer_served', 'lifespan': 1}
@@ -257,10 +300,6 @@ class Apiai(Resource):
                 "source": "bartender service"
             }
 
-# ideas to incorporate
-#   ask if customer wants to open a tab. if so, under what name?
-#   track beers consumed by this customer (session?)
-#   close out a tab - adding up total
 
 api.add_resource(Apiai, '/apiai')
 
