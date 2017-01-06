@@ -91,7 +91,15 @@ class Apiai(Resource):
         print 'action: ' + payload['result']['action']        
         #print json.dumps(payload, indent=4, separators=(',', ':'))
 
+#TODO: Add some randomized variations on the response speech.
+#TODO: Add ability to open a tab
+#TODO: Request styles available
+#TODO: Request beers in a style
+#TODO: Request beers from a particular brewer
+
+        #
         # Beer List requested
+        #
         if payload['result']['action'] == 'Beer.List':
             speech = 'On tap I have '
             for beer in beers[:-1]:
@@ -107,7 +115,9 @@ class Apiai(Resource):
                 "source": "bartender service"
             }
 
+        #
         # Specific beer or brewer queried for availability
+        #
         if payload['result']['action'] == 'Beer.Query':
             outContext = {'name': 'beer_available', 'lifespan': 1}
             print payload['result']['parameters']
@@ -123,6 +133,14 @@ class Apiai(Resource):
             if brewer == '' and product == '':
                 speech = 'No, we do not have ' + payload['result']['parameters']['beer'] + '. Would you like to see the beer list?'
                 outContext = {'name': 'See_Beer_List', 'lifespan': 1}
+
+                return {
+                    "speech": speech,
+                    "displayText": speech,
+                    # "data": data,
+                    "contextOut": [outContext],
+                    "source": "bartender service"
+                }
                 
             # If we have both brewer and product, search the list
             if brewer != '' and product != '':
@@ -172,10 +190,9 @@ class Apiai(Resource):
             }
 
 
-#TODO: Add some randomized variations on the response speech.
-#TODO: Add ability to open a tab
-
+        #
         # Specific beer or brewer requested
+        #
         if payload['result']['action'] == 'Beer.Order':
             outContext = {'name': 'beer_served', 'lifespan': 1}
             print payload['result']['parameters']
@@ -191,6 +208,14 @@ class Apiai(Resource):
             if brewer == '' and product == '':
                 speech = 'No, we do not have ' + payload['result']['parameters']['beer'] + '. Would you like to see the beer list?'
                 outContext = {'name': 'See_Beer_List', 'lifespan': 1}
+
+                return {
+                    "speech": speech,
+                    "displayText": speech,
+                    # "data": data,
+                    "contextOut": [outContext],
+                    "source": "bartender service"
+                }
                                 
             # if both brewer and product provided, we are done
             if brewer != '' and product != '':
