@@ -19,7 +19,7 @@ def addBeer(style, brewer, product):
     beers.append({"brewer": brewer, "product": product, "style": style})
     
 addBeer("Pilsner", "Pilsner Urquell", "Pilsner Urquell")
-addBeer("Pilsner", "AB Inbev", "Stella Artois")
+addBeer("Pilsner", "Stella Artois", "Stella Artois")
 addBeer("Pilsner", "Stiegl", "Pils")
 addBeer("Pilsner", "Trummer", "Pils")
 addBeer("Pilsner", "Two Roads", "Ol' Factory Pils")
@@ -110,11 +110,11 @@ class Apiai(Resource):
         
         # some debugging controls
         print 'action: ' + payload['result']['action']        
+        print 'parameters: ' + json.dumps(payload['result']['parameters'])
         #print json.dumps(payload, indent=4, separators=(',', ':'))
 
 #TODO: Add some randomized variations on the response speech.
 #TODO: Add ability to open a tab
-#TODO: Request beers in a style
 #TODO: Request beers from a particular brewer
 #TODO: Recommend a particular beer in a style
 
@@ -127,14 +127,17 @@ class Apiai(Resource):
             if 'style' in payload['result']['parameters']:
                 style = payload['result']['parameters']['style']
                 blist = [b for b in beers if b['style'] == style]
-                speech = 'For ' + style + ' I have '
+                speech = 'For ' + style + 's I have '
             else:
                 style = ''
                 speech = 'On tap I have '
                 blist = beers
            
             for beer in blist[:-1]:
-                speech += beer['brewer'] + ' ' + beer['product'] + ', '
+                if beer['brewer'] == beer['product']:
+                    speech += beer['brewer'] + ', '
+                else:
+                    speech += beer['brewer'] + ' ' + beer['product'] + ', '
             speech += 'and ' + blist[-1]['brewer'] + ' ' + blist[-1]['product'] + '. '   # pretty up the last one
             speech += 'Now, what can I get you?'                            # Webhook m/provide all text
             
@@ -248,7 +251,6 @@ class Apiai(Resource):
         #
         if payload['result']['action'] == 'Beer.Order':
             outContext = {'name': 'beer_served', 'lifespan': 1}
-            print payload['result']['parameters']
             # check to see which keys are present...
             brewer = ''
             product = ''
