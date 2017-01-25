@@ -59,7 +59,9 @@ def dipas():
 def brewers():
     return [b["brewer"] for b in beers]
         
-# Resource classes for get, post, etc.    
+# Resource classes for get, post, etc.  
+# Kore works better with a dict object returned
+# Try wrapping the returns in a dict object...Will that break anything?  
 class Pilsners(Resource):
     def get(self):
         return pilsners()
@@ -78,7 +80,7 @@ class Dipas(Resource):
        
 class Beers(Resource):
     def get(self):        
-        return beers
+        return {'beers': beers}
         
 class Brewers(Resource):
     def get(self):
