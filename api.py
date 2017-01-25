@@ -94,6 +94,11 @@ class Names(Resource):
     def get(self):
         return [b["product"] for b in beers]
         
+class Auth(Resource):
+    def get(self):
+        print "Authentication made"
+        return 'Authorized'
+        
 
 # Pure rest
 api.add_resource(Pilsners, '/pilsners')
@@ -104,6 +109,7 @@ api.add_resource(Beers, '/beers')
 api.add_resource(Brewers, '/brewers')
 api.add_resource(Styles, '/styles')
 api.add_resource(Names, '/names')
+api.add_resource(Auth, '/')
 
 # Rest, but adhering to format required for API.ai
 class Apiai(Resource):
